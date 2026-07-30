@@ -1,140 +1,107 @@
-# OrangeHRM Playwright Tests
+# OrangeHRM E2E Test Suite - Playwright + TypeScript
 
-This repo contains end-to-end tests for [OrangeHRM](https://www.orangehrm.com/) 5.9, an open-source HR application. The tests are written with [Playwright](https://playwright.dev/).
+End-to-end test suite for [OrangeHRM](https://www.orangehrm.com/) 5.9, an open-source HR platform. 32 tests in 14 spec files, covering authentication, authorization, navigation, and create then verify flow per each module.
 
-The application runs in Docker. Tests run against this local Docker instance, not against any external environment.
+The suite runs unattended in CI from a completely empty machine: the environment, the patched application image, and the database seed are all defined as code. Nothing is set up by hand.
+
+**Why OrangeHRM and not a demo site.** It is a real business application with a non-trivial domain, an API, role-based permissions. 
+That is much closer to production conditions than any practice site, and it forced real decisions rather than tutorial ones.
+
+## What this repo demonstrates
+
+| Capability | Where to see it |
+|---|---|
+| Playwright + TypeScript suite built from scratch | `tests/`, `playwright.config.ts` |
+| Stable locators in an app that ships none | `docker/patches/`, `docker/patch-oxd-testids.js` |
+| Maintainable structure (Page Object Model) | `tests/pages/` |
+| Environment as code, reproducible from zero | `docker/`, `docker/init/` |
+| CI on every push and PR, empty runner to green suite | `.github/workflows/e2e.yml` |
+| API used inside tests for setup and teardown | cleanup in each `*.spec.ts` |
+| Parallel-safe test design | `directory.spec.ts`, `pim-add-employee.spec.ts` |
+| Secrets handling | `.env.example`, CI secrets — no credentials in code |
 
 ## Quick start
 
 ```bash
+cp .env.example .env
 npm install
 npx playwright install --with-deps chromium
-docker/up.sh
+docker/up.sh 
 npx playwright test
 ```
 
-`docker/up.sh` builds and starts the application and the database. The database seeds itself automatically on first boot (details below). `npx playwright test` then runs the full suite of 32 tests.
+Credentials are read from the environment, never from test code.
 
-## The main problem: no test ids
+## Test IDs: the application is patched, not the tests
 
-The OrangeHRM application does not expose any `data-testid` attributes. This is a common situation in real-world testing, since developer teams do not always add test ids for the test team.
+OrangeHRM exposes no `data-testid` attributes, so the decission has been made that `data-testid` attributes will be injected into the application during the Docker image build. Upstream source is never modified, only the local test image is patched.
 
-There were two standard options:
-1. Locate elements by CSS class or visible text. This is fragile and breaks when styling or copy changes.
-2. Accept unstable selectors and write brittle tests.
+## Database: self-seeding, no manual steps
 
-Instead, this project **patches the application itself** to add `data-testid` attributes, as a Docker build step. The upstream OrangeHRM source is never modified. Only the local image used for testing is patched.
+The SQL file is applied on first boot: `seed.sql` — base OrangeHRM demo data (employees, admin configuration).
 
-### How the patching works
+## Test organization
 
-Two categories of code needed patching:
+### Page Object Model
 
-**1. Application source code** (`docker/patches/client-testid.patch`)
-A standard git-style diff that adds `data-testid="..."` to Vue template files, for example the login form or the "Add Employee" button. Readable and reviewable like any other code change.
+Each page has one class in `tests/pages/`. Spec files never query the DOM directly.
 
-**2. A third-party UI library** (`docker/patch-oxd-testids.js`)
-OrangeHRM depends on `@ohrm/oxd`, a UI component library distributed as pre-built, minified JavaScript with no accessible source. This script matches exact strings inside the minified bundle and inserts `data-testid` at those points. Because string-matching against minified code is inherently more fragile than a source diff, the script is strict by design: if OrangeHRM ever updates this library and the bundle output changes shape, the Docker build **fails loudly** instead of silently shipping an image with missing test ids.
+### One area per spec file
 
-Both patches are applied inside `docker/Dockerfile` during the image build.
-
-### Lesson learned: verify in the browser, not in the bundle
-
-During development, a patch appeared correct when checked with `grep` against the built JavaScript file, but the `data-testid` was not present on the rendered page. The cause: Docker was serving a stale, cached copy of the application from a leftover volume instead of the newly built image.
-
-The fix has two parts. First, `docker/up.sh` always rebuilds the image and forces a fresh volume (`--renew-anon-volumes`). Second, and more importantly: every new test id is verified live in a real browser before any test is written against it. A correct-looking bundle is not proof of a correct DOM.
-
-This same verification discipline caught two further application issues:
-- A search field that appeared to filter results but silently ignored invalid input and returned the full, unfiltered list.
-- A Vue component that did not accept text set through Playwright's standard `.fill()` call, and required a different method to set its value correctly.
-
-## The database: one seed, zero manual steps
-
-The database seeds itself automatically the first time the application starts. Two SQL files are applied in order:
-
-1. `seed.sql` - the base OrangeHRM demo data set (employees, admin configuration, and so on)
-2. `docker/init/02-admin-fixup.sql` - renames the seed's default user to `admin` and sets a password that satisfies the application's own strength policy, so the real security check stays enabled instead of being switched off for convenience
-
-This relies on a standard Docker/MariaDB mechanism: any `.sql` file placed in `docker-entrypoint-initdb.d/` runs automatically, but only on a genuinely empty database. Once data exists, these files are skipped on every subsequent start. As a result:
-- A fresh environment, such as a CI runner, seeds itself with no manual steps.
-- An existing local database is never touched or reset unexpectedly.
-
-This gap was found while preparing the project for CI. The database had originally been seeded by hand, once, and that step had never been captured as code, only as a note in an internal report. GitHub Actions provisions a completely empty machine on every run, so this manual step would have caused the first CI run to fail. Verifying the fix required deliberately wiping the local database (`docker compose down -v`) and confirming the full suite still passed from a clean state, twice in a row, before it was trusted.
-
-## How the tests are organized
-
-### Page Object Model (POM)
-
-Every page in the application has a corresponding class in `tests/pages/`. For example, `tests/pages/LoginPage.ts` encapsulates the login page: its URL, its input fields, and a `login()` method. Test files never query elements directly; they always go through a page object.
-
-This matters in practice: if OrangeHRM changes how the login button is implemented, exactly one file needs updating, not every test that logs in.
-
-### One clear responsibility per test file
-
-Each file under `tests/` covers a single concern:
-
-| File | What it checks |
+| File | Coverage |
 |---|---|
-| `login.spec.ts` | Login succeeds, and fails correctly with wrong credentials |
-| `logout.spec.ts` | Logout actually ends the session |
-| `auth-guard.spec.ts` | Unauthenticated users are redirected and cannot reach protected pages |
-| `navigation.spec.ts` | All 12 modules in the side menu load correctly |
-| `access-control.spec.ts` | An Admin account sees everything; a standard Employee account does not |
-| `pim-add-employee.spec.ts`, `recruitment.spec.ts`, `time.spec.ts`, `leave.spec.ts`, `claim.spec.ts`, `buzz.spec.ts` | A real create-then-verify flow per module |
-| `admin.spec.ts`, `performance.spec.ts`, `directory.spec.ts` | Search screens behave correctly |
+| `login.spec.ts` | Successful login; correct failure on bad credentials |
+| `logout.spec.ts` | Session is actually terminated |
+| `auth-guard.spec.ts` | Unauthenticated requests are redirected; protected pages unreachable |
+| `navigation.spec.ts` | All 12 side-menu modules load |
+| `access-control.spec.ts` | Admin sees all modules; standard Employee does not |
+| `pim-add-employee.spec.ts`, `recruitment.spec.ts`, `time.spec.ts`, `leave.spec.ts`, `claim.spec.ts`, `buzz.spec.ts` | Create-then-verify flow per module |
+| `admin.spec.ts`, `performance.spec.ts`, `directory.spec.ts` | Search screen behaviour |
 
-32 tests in total, across 14 files.
+### Test data and credentials
 
-### Test data: generated, never hardcoded
+- Names, emails, and post content are generated with `@faker-js/faker`. No fixed values, so parallel tests cannot collide on the same record.
+- Credentials come from environment variables (`process.env.ADMIN_USERNAME`), supplied by `.env` locally or by CI secrets. Nothing is committed.
 
-Names, emails, and messages used in tests are generated with [`@faker-js/faker`](https://fakerjs.dev/), a library for realistic random data. This provides two benefits:
-- Tests never collide with each other through reuse of the same fixed value.
-- No repeated placeholder data, such as `"Test User 123"`, scattered across the codebase.
+### Single source of truth for URLs
 
-Login credentials are never written in test code either. They are read from environment variables (`process.env.ADMIN_USERNAME`), sourced from a local `.env` file (see `.env.example`) or from CI configuration. No credential is ever committed to the repository.
+Every page URL and API endpoint lives in `tests/const/selectors/urls.ts`. A route rename in OrangeHRM is a one-line change.
 
-### One shared source of truth for URLs
+### Cleanup
 
-Every page URL and API endpoint used by the tests is defined once, in `tests/const/selectors/urls.ts`. Test files import from this file instead of duplicating path strings. A route rename in OrangeHRM requires a single-line change.
+Every test that creates data (employee, candidate, customer) deletes it through the application's own API at the end of the test. Repeated suite runs leave the database in its pre-run state.
 
-### Tests clean up after themselves
+### Parallel safety
 
-Every test that creates data (an employee, a candidate, a customer, and so on) deletes it again at the end, using the application's own API. Running the suite repeatedly leaves the database in the same state as before the run.
+Playwright runs specs in parallel. Early versions of several tests assumed a new record would be the first table row — true in isolation, false as soon as another test writes concurrently. They were rewritten to locate records by their own unique generated content. The whole suite was then run repeatedly under full parallelism before being considered done.
 
-Two modules do not support true deletion: Leave requests and Buzz posts can only be cancelled, not removed. This reflects an actual constraint of the application, not a gap in the tests, and is documented as such rather than worked around silently.
+## CI
 
-### Safe under parallel execution
+`.github/workflows/e2e.yml` runs on every push and pull request:
 
-Playwright runs tests in parallel by default. Early versions of some tests assumed a newly created item would be the first row in its table, which holds true in isolation but breaks the moment another test creates data concurrently. These were rewritten to locate items by their own unique content instead of by position. Every test in this suite was deliberately stress-tested under heavy parallel execution before being considered complete.
-
-## Continuous Integration (CI)
-
-`.github/workflows/e2e.yml` runs the full suite automatically on every push and every pull request, using GitHub Actions. The pipeline:
-
-1. Builds the patched Docker image
-2. Starts the application and database (self-seeding, as described above)
-3. Waits until the application actually responds, not merely until the container has started
-4. Runs all 32 tests
-5. Uploads the HTML test report as a downloadable artifact, regardless of outcome
-
-## A short list of real bugs found during this work
-
-- **A 500 server error** on the Leave module, caused by missing setup data. Root-caused to the exact database table responsible, then fixed properly rather than worked around.
-- **A broken search filter** in the company Directory that silently returned every employee instead of filtering, previously hidden by the fact that the seed database only ever contained one employee.
-- **Inconsistent authorization responses**: some blocked actions return a clean `403`, one returns an empty list instead of an error, and one returns a `422` validation error that reads as a bad request rather than a permissions failure. All three are documented so future tests assert the correct behavior per endpoint.
-- **An unnecessary security trade-off in the test setup itself**: an earlier version of the database fix-up disabled the application's password-strength check to make a weak admin password work. Reading the actual authentication source (`LocalAuthProvider.php`) showed this check runs at login, not at password creation, and that the password only needs to satisfy the application's own policy - including its zxcvbn-based strength score, verified directly against the application's own scoring library rather than assumed. The fix-up now uses a password that passes the real check, so the security setting stays on.
+1. Build the patched Docker image.
+2. Start app and database (self-seeding).
+3. Poll until the application actually responds — not just until the container is up.
+4. Run all tests.
+5. Upload the HTML report as an artifact, pass or fail.
 
 ## Project structure
 
 ```
 tests/
-  const/selectors/urls.ts   single source of truth for every URL
-  fixtures/global-setup.ts  one-time setup that runs before any test
-  pages/                    one class per page (Page Object Model)
-  *.spec.ts                 the tests themselves, one file per feature
+  const/selectors/urls.ts   all URLs and API endpoints
+  fixtures/global-setup.ts  one-time setup before the suite
+  pages/                    one class per page (POM)
+  *.spec.ts                 specs, one file per feature
 docker/
-  Dockerfile                builds the patched application image
-  patches/                  application source code patches (readable diffs)
-  patch-oxd-testids.js      patches the third-party UI library
-  init/                     database seed fix-up, runs on first boot
+  Dockerfile                builds the patched image
+  up.sh                     rebuild + fresh volumes + start
+  patches/                  Vue template diffs
+  patch-oxd-testids.js      patches the minified oxd bundle
+  init/                     DB fix-up, first boot only
 .github/workflows/e2e.yml   CI pipeline
 ```
+
+## Author
+
+Built by Tomasz Sikora — Senior QA Engineer, BEng in Computer Science, ISTQB CTFL
