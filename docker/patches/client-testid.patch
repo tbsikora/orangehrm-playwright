@@ -1,0 +1,120 @@
+diff --git a/a/src/core/components/buttons/SubmitButton.vue b/b/src/core/components/buttons/SubmitButton.vue
+index 7be04a6..f7adb13 100644
+--- a/a/src/core/components/buttons/SubmitButton.vue
++++ b/b/src/core/components/buttons/SubmitButton.vue
+@@ -23,6 +23,7 @@
+     display-type="secondary"
+     :label="$t('general.save')"
+     type="submit"
++    data-testid="save-button"
+   />
+ </template>
+ 
+diff --git a/a/src/orangehrmAuthenticationPlugin/pages/Login.vue b/b/src/orangehrmAuthenticationPlugin/pages/Login.vue
+index 1002e88..a9c5219 100644
+--- a/a/src/orangehrmAuthenticationPlugin/pages/Login.vue
++++ b/b/src/orangehrmAuthenticationPlugin/pages/Login.vue
+@@ -28,6 +28,7 @@
+           :show="error !== null"
+           :message="error?.message || ''"
+           type="error"
++          data-testid="login-error-alert"
+         ></oxd-alert>
+         <oxd-sheet
+           v-if="isDemoMode"
+@@ -55,6 +56,7 @@
+             :placeholder="$t('auth.username')"
+             :rules="rules.username"
+             autofocus
++            data-testid="login-username-input"
+           />
+         </oxd-form-row>
+ 
+@@ -67,6 +69,7 @@
+             :placeholder="$t('auth.password')"
+             type="password"
+             :rules="rules.password"
++            data-testid="login-password-input"
+           />
+         </oxd-form-row>
+ 
+@@ -76,6 +79,7 @@
+             display-type="main"
+             :label="$t('auth.login')"
+             type="submit"
++            data-testid="login-submit-button"
+           />
+         </oxd-form-actions>
+         <div class="orangehrm-login-forgot">
+diff --git a/a/src/orangehrmPimPlugin/components/FullNameInput.vue b/b/src/orangehrmPimPlugin/components/FullNameInput.vue
+index 7e286ce..dcff7cc 100644
+--- a/a/src/orangehrmPimPlugin/components/FullNameInput.vue
++++ b/b/src/orangehrmPimPlugin/components/FullNameInput.vue
+@@ -27,6 +27,7 @@
+       :model-value="firstName"
+       :rules="rules.firstName"
+       :disabled="disabled"
++      data-testid="firstName-input"
+       @update:model-value="$emit('update:firstName', $event)"
+     />
+     <oxd-input-field
+@@ -36,6 +37,7 @@
+       :rules="rules.middleName"
+       :disabled="disabled"
+       :placeholder="showMiddleNamePlaceholder ? $t('general.middle_name') : ''"
++      data-testid="middleName-input"
+       @update:model-value="$emit('update:middleName', $event)"
+     />
+     <oxd-input-field
+@@ -45,6 +47,7 @@
+       :model-value="lastName"
+       :rules="rules.lastName"
+       :disabled="disabled"
++      data-testid="lastName-input"
+       @update:model-value="$emit('update:lastName', $event)"
+     />
+   </oxd-input-group>
+diff --git a/a/src/orangehrmPimPlugin/pages/employee/Employee.vue b/b/src/orangehrmPimPlugin/pages/employee/Employee.vue
+index 8970b6b..0d8828b 100644
+--- a/a/src/orangehrmPimPlugin/pages/employee/Employee.vue
++++ b/b/src/orangehrmPimPlugin/pages/employee/Employee.vue
+@@ -28,6 +28,7 @@
+                 v-model="filters.employee"
+                 :rules="rules.employee"
+                 :params="{includeEmployees: filters.includeEmployees?.param}"
++                data-testid="employee-name-filter"
+               />
+             </oxd-grid-item>
+             <oxd-grid-item>
+@@ -67,12 +68,14 @@
+             display-type="ghost"
+             :label="$t('general.reset')"
+             type="reset"
++            data-testid="employee-reset-button"
+           />
+           <oxd-button
+             class="orangehrm-left-space"
+             display-type="secondary"
+             :label="$t('general.search')"
+             type="submit"
++            data-testid="employee-search-button"
+           />
+         </oxd-form-actions>
+       </oxd-form>
+@@ -87,6 +90,7 @@
+           :label="$t('general.add')"
+           icon-name="plus"
+           display-type="secondary"
++          data-testid="add-employee-button"
+           @click="onClickAdd"
+         />
+       </div>
+@@ -96,7 +100,7 @@
+         :loading="isLoading"
+         @delete="onClickDeleteSelected"
+       ></table-header>
+-      <div class="orangehrm-container">
++      <div class="orangehrm-container" data-testid="employee-table-container">
+         <oxd-card-table
+           ref="cardTable"
+           v-model:selected="checkedItems"

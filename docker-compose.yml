@@ -14,17 +14,20 @@ services:
       timeout: 5s
       retries: 10
 
+  # Use docker/up.sh instead of `docker compose up` directly - see that script
+  # for why (orangehrm/orangehrm:5.9's baked-in VOLUME /var/www/html otherwise
+  # masks rebuilds with a stale anonymous volume).
   orangehrm:
-    image: orangehrm/orangehrm:5.9
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: orangehrm-playwright/orangehrm:5.9-testid
     platform: linux/amd64
     ports:
       - "8080:80"
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - app_data:/var/www/html
 
 volumes:
   db_data:
-  app_data:
