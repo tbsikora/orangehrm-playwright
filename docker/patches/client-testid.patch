@@ -1,5 +1,4 @@
 diff --git a/a/src/core/components/buttons/SubmitButton.vue b/b/src/core/components/buttons/SubmitButton.vue
-index 7be04a6..f7adb13 100644
 --- a/a/src/core/components/buttons/SubmitButton.vue
 +++ b/b/src/core/components/buttons/SubmitButton.vue
 @@ -23,6 +23,7 @@
@@ -10,8 +9,100 @@ index 7be04a6..f7adb13 100644
    />
  </template>
  
+diff --git a/a/src/orangehrmTimePlugin/pages/configure/TimeSheetPeriod.vue b/b/src/orangehrmTimePlugin/pages/configure/TimeSheetPeriod.vue
+--- a/a/src/orangehrmTimePlugin/pages/configure/TimeSheetPeriod.vue
++++ b/b/src/orangehrmTimePlugin/pages/configure/TimeSheetPeriod.vue
+@@ -34,6 +34,7 @@
+                 :label="$t('time.add_timesheet_period_config')"
+                 :options="days"
+                 :rules="rules.startDay"
++                data-testid="timesheet-start-day-select"
+                 required
+               />
+             </oxd-grid-item>
+diff --git a/a/src/orangehrmTimePlugin/pages/customer/SaveCustomer.vue b/b/src/orangehrmTimePlugin/pages/customer/SaveCustomer.vue
+--- a/a/src/orangehrmTimePlugin/pages/customer/SaveCustomer.vue
++++ b/b/src/orangehrmTimePlugin/pages/customer/SaveCustomer.vue
+@@ -30,6 +30,7 @@
+             v-model="customer.name"
+             :label="$t('general.name')"
+             :rules="rules.name"
++            data-testid="customer-name-input"
+             required
+           />
+         </oxd-form-row>
+diff --git a/a/src/orangehrmRecruitmentPlugin/pages/SaveCandidate.vue b/b/src/orangehrmRecruitmentPlugin/pages/SaveCandidate.vue
+--- a/a/src/orangehrmRecruitmentPlugin/pages/SaveCandidate.vue
++++ b/b/src/orangehrmRecruitmentPlugin/pages/SaveCandidate.vue
+@@ -57,6 +57,7 @@
+                 :label="$t('general.email')"
+                 :placeholder="$t('general.type_here')"
+                 :rules="rules.email"
++                data-testid="candidate-email-input"
+                 required
+               />
+             </oxd-grid-item>
+diff --git a/a/src/orangehrmRecruitmentPlugin/pages/ViewCandidatesList.vue b/b/src/orangehrmRecruitmentPlugin/pages/ViewCandidatesList.vue
+--- a/a/src/orangehrmRecruitmentPlugin/pages/ViewCandidatesList.vue
++++ b/b/src/orangehrmRecruitmentPlugin/pages/ViewCandidatesList.vue
+@@ -45,6 +45,7 @@
+               <candidate-autocomplete
+                 v-model="filters.candidate"
+                 :rules="rules.candidate"
++                data-testid="candidate-name-filter"
+               />
+             </oxd-grid-item>
+             <oxd-grid-item>
+diff --git a/a/src/orangehrmAdminPlugin/pages/systemUser/SystemUser.vue b/b/src/orangehrmAdminPlugin/pages/systemUser/SystemUser.vue
+--- a/a/src/orangehrmAdminPlugin/pages/systemUser/SystemUser.vue
++++ b/b/src/orangehrmAdminPlugin/pages/systemUser/SystemUser.vue
+@@ -27,6 +27,7 @@
+               <oxd-input-field
+                 v-model="filters.username"
+                 :label="$t('general.username')"
++                data-testid="user-list-username-filter"
+               />
+             </oxd-grid-item>
+             <oxd-grid-item>
+@@ -67,6 +68,7 @@
+             display-type="secondary"
+             :label="$t('general.search')"
+             type="submit"
++            data-testid="user-list-search-button"
+           />
+         </oxd-form-actions>
+       </oxd-form>
+diff --git a/a/src/orangehrmPerformancePlugin/pages/ReviewSearch.vue b/b/src/orangehrmPerformancePlugin/pages/ReviewSearch.vue
+--- a/a/src/orangehrmPerformancePlugin/pages/ReviewSearch.vue
++++ b/b/src/orangehrmPerformancePlugin/pages/ReviewSearch.vue
+@@ -30,6 +30,7 @@
+               :params="{
+                 includeEmployees: filters.includeEmployees.param,
+               }"
++              data-testid="review-employee-name-filter"
+             />
+           </oxd-grid-item>
+           <oxd-grid-item>
+@@ -83,6 +83,7 @@
+             display-type="secondary"
+             :label="$t('general.search')"
+             type="submit"
++            data-testid="review-search-button"
+           />
+         </oxd-form-actions>
+       </oxd-form>
+diff --git a/a/src/orangehrmCorporateDirectoryPlugin/pages/CorporateDirectory.vue b/b/src/orangehrmCorporateDirectoryPlugin/pages/CorporateDirectory.vue
+--- a/a/src/orangehrmCorporateDirectoryPlugin/pages/CorporateDirectory.vue
++++ b/b/src/orangehrmCorporateDirectoryPlugin/pages/CorporateDirectory.vue
+@@ -28,6 +28,7 @@
+                 v-model="filters.employeeNumber"
+                 :rules="rules.employee"
+                 api-path="/api/v2/directory/employees"
++                data-testid="directory-name-filter"
+               />
+             </oxd-grid-item>
+             <oxd-grid-item>
 diff --git a/a/src/orangehrmAuthenticationPlugin/pages/Login.vue b/b/src/orangehrmAuthenticationPlugin/pages/Login.vue
-index 1002e88..a9c5219 100644
 --- a/a/src/orangehrmAuthenticationPlugin/pages/Login.vue
 +++ b/b/src/orangehrmAuthenticationPlugin/pages/Login.vue
 @@ -28,6 +28,7 @@
@@ -47,7 +138,6 @@ index 1002e88..a9c5219 100644
          </oxd-form-actions>
          <div class="orangehrm-login-forgot">
 diff --git a/a/src/orangehrmPimPlugin/components/FullNameInput.vue b/b/src/orangehrmPimPlugin/components/FullNameInput.vue
-index 7e286ce..dcff7cc 100644
 --- a/a/src/orangehrmPimPlugin/components/FullNameInput.vue
 +++ b/b/src/orangehrmPimPlugin/components/FullNameInput.vue
 @@ -27,6 +27,7 @@
@@ -74,8 +164,51 @@ index 7e286ce..dcff7cc 100644
        @update:model-value="$emit('update:lastName', $event)"
      />
    </oxd-input-group>
+diff --git a/a/src/core/components/layout/Layout.vue b/b/src/core/components/layout/Layout.vue
+--- a/a/src/core/components/layout/Layout.vue
++++ b/b/src/core/components/layout/Layout.vue
+@@ -17,13 +17,19 @@
+           href="#"
+           role="menuitem"
+           class="oxd-userdropdown-link"
++          data-testid="user-dropdown-about"
+           @click="openAboutModel"
+         >
+           {{ $t('general.about') }}
+         </a>
+       </li>
+       <li>
+-        <a :href="supportUrl" role="menuitem" class="oxd-userdropdown-link">
++        <a
++          :href="supportUrl"
++          role="menuitem"
++          class="oxd-userdropdown-link"
++          data-testid="user-dropdown-support"
++        >
+           {{ $t('general.support') }}
+         </a>
+       </li>
+@@ -32,12 +38,18 @@
+           :href="updatePasswordUrl"
+           role="menuitem"
+           class="oxd-userdropdown-link"
++          data-testid="user-dropdown-change-password"
+         >
+           {{ $t('general.change_password') }}
+         </a>
+       </li>
+       <li>
+-        <a :href="logoutUrl" role="menuitem" class="oxd-userdropdown-link">
++        <a
++          :href="logoutUrl"
++          role="menuitem"
++          class="oxd-userdropdown-link"
++          data-testid="user-dropdown-logout"
++        >
+           {{ $t('general.logout') }}
+         </a>
+       </li>
 diff --git a/a/src/orangehrmPimPlugin/pages/employee/Employee.vue b/b/src/orangehrmPimPlugin/pages/employee/Employee.vue
-index 8970b6b..0d8828b 100644
 --- a/a/src/orangehrmPimPlugin/pages/employee/Employee.vue
 +++ b/b/src/orangehrmPimPlugin/pages/employee/Employee.vue
 @@ -28,6 +28,7 @@
@@ -118,3 +251,67 @@ index 8970b6b..0d8828b 100644
          <oxd-card-table
            ref="cardTable"
            v-model:selected="checkedItems"
+diff --git a/a/src/orangehrmLeavePlugin/pages/LeaveApply.vue b/b/src/orangehrmLeavePlugin/pages/LeaveApply.vue
+--- a/a/src/orangehrmLeavePlugin/pages/LeaveApply.vue
++++ b/b/src/orangehrmLeavePlugin/pages/LeaveApply.vue
+@@ -50,6 +50,7 @@
+                 :rules="rules.type"
+                 :options="leaveTypes"
+                 :label="$t('leave.leave_type')"
++                data-testid="leave-type-select"
+                 required
+               />
+             </oxd-grid-item>
+@@ -67,6 +68,7 @@
+                 :label="$t('general.from_date')"
+                 :rules="rules.fromDate"
+                 :years="yearsArray"
++                data-testid="leave-from-date-input"
+                 required
+               />
+             </oxd-grid-item>
+@@ -76,6 +78,7 @@
+                 :label="$t('general.to_date')"
+                 :rules="rules.toDate"
+                 :years="yearsArray"
++                data-testid="leave-to-date-input"
+                 required
+               />
+             </oxd-grid-item>
+diff --git a/a/src/orangehrmClaimPlugin/pages/submitClaim/SubmitClaimRequest.vue b/b/src/orangehrmClaimPlugin/pages/submitClaim/SubmitClaimRequest.vue
+--- a/a/src/orangehrmClaimPlugin/pages/submitClaim/SubmitClaimRequest.vue
++++ b/b/src/orangehrmClaimPlugin/pages/submitClaim/SubmitClaimRequest.vue
+@@ -33,6 +33,7 @@
+               <claim-event-dropdown
+                 v-model="request.event"
+                 :rules="rules.event"
++                data-testid="claim-event-select"
+                 required
+               />
+             </oxd-grid-item>
+@@ -43,6 +44,7 @@
+                 :rules="rules.currency"
+                 :options="currencies"
+                 :label="$t('general.currency')"
++                data-testid="claim-currency-select"
+                 required
+               />
+             </oxd-grid-item>
+diff --git a/a/src/orangehrmBuzzPlugin/components/CreatePost.vue b/b/src/orangehrmBuzzPlugin/components/CreatePost.vue
+--- a/a/src/orangehrmBuzzPlugin/components/CreatePost.vue
++++ b/b/src/orangehrmBuzzPlugin/components/CreatePost.vue
+@@ -27,8 +27,13 @@
+             v-model="post"
+             :rules="rules"
+             :placeholder="$t('buzz.post_placeholder')"
++            data-testid="buzz-post-textarea"
+           >
+-            <oxd-button type="submit" :label="$t('buzz.post')" />
++            <oxd-button
++              type="submit"
++              :label="$t('buzz.post')"
++              data-testid="buzz-post-button"
++            />
+           </oxd-buzz-post-input>
+         </oxd-form>
+       </div>

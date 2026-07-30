@@ -45,6 +45,46 @@ const targets = [
         replacement:
           'l("button", {\n      type: "button",\n      class: $(e.classes),\n      "data-testid": e.previous ? "pagination-previous" : e.next ? "pagination-next" : "pagination-page-" + e.page\n    }, [',
       },
+      {
+        name: 'user dropdown toggle -> data-testid on the <span>',
+        anchor: '{ class: "oxd-userdropdown-tab" }',
+        replacement:
+          '{ class: "oxd-userdropdown-tab", "data-testid": "user-dropdown-toggle" }',
+      },
+      {
+        name: 'topbar breadcrumb module title -> data-testid on the <h6>',
+        anchor:
+          'class: "oxd-topbar-header-breadcrumb-module"\n          }, {',
+        replacement:
+          'class: "oxd-topbar-header-breadcrumb-module",\n            "data-testid": "page-title"\n          }, {',
+      },
+      {
+        name: 'topbar breadcrumb level subtitle -> data-testid on the <h6>',
+        anchor:
+          'class: "oxd-topbar-header-breadcrumb-level"\n          }, {',
+        replacement:
+          'class: "oxd-topbar-header-breadcrumb-level",\n            "data-testid": "page-subtitle"\n          }, {',
+      },
+      {
+        name: 'toast title -> data-testid on the <p>',
+        anchor: 'type: "toast-title",\n            class: "oxd-toast-content-text"',
+        replacement:
+          'type: "toast-title",\n            class: "oxd-toast-content-text",\n            "data-testid": "toast-title"',
+      },
+      {
+        name: 'toast message -> data-testid on the <p>',
+        anchor:
+          'type: "toast-message",\n            class: "oxd-toast-content-text"',
+        replacement:
+          'type: "toast-message",\n            class: "oxd-toast-content-text",\n            "data-testid": "toast-message"',
+      },
+      {
+        name: 'date input -> data-testid forwarded from $attrs onto the actual <input>',
+        anchor:
+          'h(n, {\n        ref: "oxdInput",\n        "has-error": e.hasError,\n        disabled: e.disabled,\n        readonly: e.readonly,\n        value: e.displayDate,\n        placeholder: e.placeholder,\n        onBlur: e.onBlur,\n        onClick: e.toggleDropdown,\n        "onUpdate:modelValue": e.onDateTyped\n      }, null, 8, ["has-error", "disabled", "readonly", "value", "placeholder", "onBlur", "onClick", "onUpdate:modelValue"])',
+        replacement:
+          'h(n, {\n        ref: "oxdInput",\n        "has-error": e.hasError,\n        disabled: e.disabled,\n        readonly: e.readonly,\n        value: e.displayDate,\n        placeholder: e.placeholder,\n        onBlur: e.onBlur,\n        onClick: e.toggleDropdown,\n        "onUpdate:modelValue": e.onDateTyped,\n        "data-testid": e.$attrs["data-testid"]\n      }, null, 8, ["has-error", "disabled", "readonly", "value", "placeholder", "onBlur", "onClick", "onUpdate:modelValue"])',
+      },
     ],
   },
   {
@@ -70,6 +110,42 @@ const targets = [
           'e.createElementVNode("button",{type:"button",class:e.normalizeClass(t.classes)},[',
         replacement:
           'e.createElementVNode("button",{type:"button",class:e.normalizeClass(t.classes),"data-testid":t.previous?"pagination-previous":t.next?"pagination-next":"pagination-page-"+t.page},[',
+      },
+      {
+        name: 'user dropdown toggle -> data-testid on the <span>',
+        anchor: 'Dn={class:"oxd-userdropdown-tab"}',
+        replacement: 'Dn={class:"oxd-userdropdown-tab","data-testid":"user-dropdown-toggle"}',
+      },
+      {
+        name: 'topbar breadcrumb module title -> data-testid on the <h6>',
+        anchor: '{tag:"h6",class:"oxd-topbar-header-breadcrumb-module"}',
+        replacement:
+          '{tag:"h6",class:"oxd-topbar-header-breadcrumb-module","data-testid":"page-title"}',
+      },
+      {
+        name: 'topbar breadcrumb level subtitle -> data-testid on the <h6>',
+        anchor: '{key:0,tag:"h6",class:"oxd-topbar-header-breadcrumb-level"}',
+        replacement:
+          '{key:0,tag:"h6",class:"oxd-topbar-header-breadcrumb-level","data-testid":"page-subtitle"}',
+      },
+      {
+        name: 'toast title -> data-testid on the <p>',
+        anchor: 'type:"toast-title",class:"oxd-toast-content-text"',
+        replacement:
+          'type:"toast-title",class:"oxd-toast-content-text","data-testid":"toast-title"',
+      },
+      {
+        name: 'toast message -> data-testid on the <p>',
+        anchor: 'type:"toast-message",class:"oxd-toast-content-text"',
+        replacement:
+          'type:"toast-message",class:"oxd-toast-content-text","data-testid":"toast-message"',
+      },
+      {
+        name: 'date input -> data-testid forwarded from $attrs onto the actual <input>',
+        anchor:
+          'e.createVNode(a,{ref:"oxdInput","has-error":t.hasError,disabled:t.disabled,readonly:t.readonly,value:t.displayDate,placeholder:t.placeholder,onBlur:t.onBlur,onClick:t.toggleDropdown,"onUpdate:modelValue":t.onDateTyped},null,8,["has-error","disabled","readonly","value","placeholder","onBlur","onClick","onUpdate:modelValue"])',
+        replacement:
+          'e.createVNode(a,{ref:"oxdInput","has-error":t.hasError,disabled:t.disabled,readonly:t.readonly,value:t.displayDate,placeholder:t.placeholder,onBlur:t.onBlur,onClick:t.toggleDropdown,"onUpdate:modelValue":t.onDateTyped,"data-testid":t.$attrs["data-testid"]},null,8,["has-error","disabled","readonly","value","placeholder","onBlur","onClick","onUpdate:modelValue"])',
       },
     ],
   },
