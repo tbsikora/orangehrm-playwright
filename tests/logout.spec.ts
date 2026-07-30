@@ -6,7 +6,7 @@ import { NavBar } from './pages/NavBar';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('logout returns to the login page and ends the session', async ({ page }) => {
+test('Logout returns to the login page and ends the session', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const navBar = new NavBar(page);

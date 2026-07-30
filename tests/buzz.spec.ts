@@ -8,7 +8,7 @@ import { LoginPage } from './pages/LoginPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('posting to buzz makes it appear in the feed', async ({ page }) => {
+test('Posting to buzz makes it appear in the feed', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const buzzPage = new BuzzPage(page);

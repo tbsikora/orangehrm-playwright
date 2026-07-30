@@ -30,14 +30,15 @@ test.describe('Module navigation smoke', () => {
   });
 
   for (const { name, title } of MODULES) {
-    test(`${name} module loads`, async ({ page }) => {
+    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+    test(`${capitalizedName} module loads`, async ({ page }) => {
       const navBar = new NavBar(page);
       await navBar.goToModule(name);
       await expect(navBar.pageTitle).toHaveText(title);
     });
   }
 
-  test('maintenance module requires re-entering admin credentials', async ({ page }) => {
+  test('Maintenance module requires re-entering admin credentials', async ({ page }) => {
     const navBar = new NavBar(page);
     await navBar.goToModule('maintenance');
     await expect(page.getByText('Administrator Access')).toBeVisible();

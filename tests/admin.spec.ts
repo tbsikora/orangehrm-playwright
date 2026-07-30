@@ -6,7 +6,7 @@ import { SystemUserListPage } from './pages/SystemUserListPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('searching the system user list by username finds the admin account', async ({ page }) => {
+test('Searching the system user list by username finds the admin account', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const systemUserListPage = new SystemUserListPage(page);

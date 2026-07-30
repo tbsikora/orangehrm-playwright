@@ -9,7 +9,7 @@ import { LoginPage } from './pages/LoginPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('adding a candidate makes them searchable in the candidate list', async ({ page }) => {
+test('Adding a candidate makes them searchable in the candidate list', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const addCandidatePage = new AddCandidatePage(page);

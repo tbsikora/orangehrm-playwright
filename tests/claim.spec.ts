@@ -8,7 +8,7 @@ import { SubmitClaimPage } from './pages/SubmitClaimPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('submitting a claim makes it appear in My Claims', async ({ page }) => {
+test('Submitting a claim makes it appear in My Claims', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const submitClaimPage = new SubmitClaimPage(page);

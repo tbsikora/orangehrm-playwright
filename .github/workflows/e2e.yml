@@ -1,4 +1,5 @@
 name: E2E Tests
+run-name: E2E test run on ${{ github.ref_name }}
 
 on:
   push:
@@ -6,10 +7,10 @@ on:
   pull_request:
 
 env:
-  DB_ROOT_PASSWORD: root_dev_only
-  DB_PASSWORD: orangehrm_dev_only
-  ADMIN_USERNAME: admin
-  ADMIN_PASSWORD: admin123
+  DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
 jobs:
   e2e:

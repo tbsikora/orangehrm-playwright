@@ -1,2 +1,1 @@
-UPDATE ohrm_user SET user_name = 'admin', user_password = '$2y$12$Qr49e3Vgyl49ez063MgFD.vAPFgq.ACd4eMH/NE3KC4DBUHXQu0DS' WHERE id = 1;
-UPDATE hs_hr_config SET value = 'off' WHERE name = 'auth.password_policy.enforce_password_strength';
+UPDATE ohrm_user SET user_name = 'admin', user_password = '$2y$12$o1ildrriQfyOprJKn5Lz/ei8inm3SV1DpmawRKaHWbqoheHmID4U.' WHERE id = 1;

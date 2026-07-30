@@ -7,7 +7,7 @@ const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test.describe('Login', () => {
-  test('valid credentials redirect to the dashboard', async ({ page }) => {
+  test('Valid credentials redirect to the dashboard', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const dashboardPage = new DashboardPage();
     const navBar = new NavBar(page);
@@ -19,7 +19,7 @@ test.describe('Login', () => {
     await expect(navBar.pageTitle).toHaveText('Dashboard');
   });
 
-  test('wrong password shows "Invalid credentials" and stays on the login page', async ({
+  test('Wrong password shows "Invalid credentials" and stays on the login page', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -31,7 +31,7 @@ test.describe('Login', () => {
     await expect(page).toHaveURL(loginPage.url);
   });
 
-  test('unknown username shows "Invalid credentials"', async ({ page }) => {
+  test('Unknown username shows "Invalid credentials"', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.goto();
@@ -40,7 +40,7 @@ test.describe('Login', () => {
     await loginPage.expectInvalidCredentials();
   });
 
-  test('empty submission is blocked client-side with Required errors', async ({ page }) => {
+  test('Empty submission is blocked client-side with Required errors', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
     await loginPage.goto();
@@ -51,7 +51,7 @@ test.describe('Login', () => {
     await expect(page).toHaveURL(loginPage.url);
   });
 
-  test('session persists across a reload after login', async ({ page }) => {
+  test('Session persists across a reload after login', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const dashboardPage = new DashboardPage();
     const navBar = new NavBar(page);

@@ -8,7 +8,7 @@ import { MyLeaveListPage } from './pages/MyLeaveListPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('applying for leave makes it appear in My Leave List', async ({ page }) => {
+test('Applying for leave makes it appear in My Leave List', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const applyLeavePage = new ApplyLeavePage(page);

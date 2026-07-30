@@ -7,7 +7,7 @@ import { ReviewSearchPage } from './pages/ReviewSearchPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('searching manage reviews by employee name does not error', async ({ page }) => {
+test('Searching manage reviews by employee name does not error', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const navBar = new NavBar(page);

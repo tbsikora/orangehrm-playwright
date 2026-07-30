@@ -6,7 +6,7 @@ import { LoginPage } from './pages/LoginPage';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
-test('searching the directory by employee name finds a match', async ({ page }) => {
+test('Searching the directory by employee name finds a match', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const dashboardPage = new DashboardPage();
   const directoryPage = new DirectoryPage(page);
