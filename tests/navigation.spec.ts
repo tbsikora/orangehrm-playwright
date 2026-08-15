@@ -23,7 +23,7 @@ const MODULES = [
 test.describe('Module navigation smoke', () => {
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
     await loginPage.goto();
     await loginPage.login(ADMIN_USERNAME, ADMIN_PASSWORD);
     await expect(page).toHaveURL(dashboardPage.url);

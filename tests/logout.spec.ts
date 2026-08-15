@@ -8,7 +8,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Logout returns to the login page and ends the session', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const navBar = new NavBar(page);
 
   await loginPage.goto();
@@ -19,6 +19,6 @@ test('Logout returns to the login page and ends the session', async ({ page }) =
 
   await expect(page).toHaveURL(loginPage.url);
 
-  await page.goto(dashboardPage.url);
+  await dashboardPage.goto();
   await expect(page).toHaveURL(loginPage.url);
 });

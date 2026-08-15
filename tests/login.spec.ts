@@ -9,7 +9,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 test.describe('Login', () => {
   test('Valid credentials redirect to the dashboard', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
     const navBar = new NavBar(page);
 
     await loginPage.goto();
@@ -53,7 +53,7 @@ test.describe('Login', () => {
 
   test('Session persists across a reload after login', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
     const navBar = new NavBar(page);
 
     await loginPage.goto();

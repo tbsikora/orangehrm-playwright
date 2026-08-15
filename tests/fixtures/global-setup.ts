@@ -11,7 +11,7 @@ export default async function globalSetup() {
   const browser = await chromium.launch();
   const page = await browser.newPage({ baseURL: 'http://localhost:8080' });
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
 
   await loginPage.goto();
   await loginPage.login(ADMIN_USERNAME, ADMIN_PASSWORD);
