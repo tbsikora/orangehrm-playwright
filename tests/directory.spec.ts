@@ -8,7 +8,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Searching the directory by employee name finds a match', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const directoryPage = new DirectoryPage(page);
 
   await loginPage.goto();

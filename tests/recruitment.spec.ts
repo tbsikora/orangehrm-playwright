@@ -11,7 +11,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Adding a candidate makes them searchable in the candidate list', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const addCandidatePage = new AddCandidatePage(page);
   const candidateListPage = new CandidateListPage(page);
   const firstName = faker.person.firstName();

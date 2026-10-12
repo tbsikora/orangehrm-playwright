@@ -33,7 +33,7 @@ test.describe('Employee vs Admin access control', () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
 
     await loginPage.goto();
     await loginPage.login(ADMIN_USERNAME, ADMIN_PASSWORD);
@@ -62,7 +62,7 @@ test.describe('Employee vs Admin access control', () => {
     const context = await browser.newContext();
     const page = await context.newPage();
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
 
     await loginPage.goto();
     await loginPage.login(ADMIN_USERNAME, ADMIN_PASSWORD);
@@ -78,7 +78,7 @@ test.describe('Employee vs Admin access control', () => {
 
   test('Admin sees the admin-only modules', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
     const navBar = new NavBar(page);
 
     await loginPage.goto();
@@ -92,7 +92,7 @@ test.describe('Employee vs Admin access control', () => {
 
   test('Employee does not see the admin-only modules', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
     const navBar = new NavBar(page);
 
     await loginPage.goto();
@@ -109,7 +109,7 @@ test.describe('Employee vs Admin access control', () => {
 
   test('Employee gets a 403 from an admin-only API endpoint', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage();
+    const dashboardPage = new DashboardPage(page);
 
     await loginPage.goto();
     await loginPage.login(EMPLOYEE_USERNAME, EMPLOYEE_PASSWORD);

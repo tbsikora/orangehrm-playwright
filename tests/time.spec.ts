@@ -11,7 +11,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Adding a customer makes them appear in the customer list', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const addCustomerPage = new AddCustomerPage(page);
   const customerListPage = new CustomerListPage(page);
   const name = faker.company.name() + ' ' + faker.string.alphanumeric(6);

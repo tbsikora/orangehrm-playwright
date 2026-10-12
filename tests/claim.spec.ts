@@ -10,7 +10,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Submitting a claim makes it appear in My Claims', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const submitClaimPage = new SubmitClaimPage(page);
   const myClaimsPage = new MyClaimsPage(page);
 

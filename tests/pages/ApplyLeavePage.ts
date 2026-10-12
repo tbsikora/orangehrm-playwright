@@ -30,19 +30,10 @@ export class ApplyLeavePage {
     await this.page.locator('.oxd-select-option').filter({ hasText: name }).click();
   }
 
-  async setFromDateToday() {
-    await this.fromDateInput.click();
-    await this.page
-      .locator('.oxd-date-wrapper', { has: this.fromDateInput })
-      .getByText('Today', { exact: true })
-      .click();
-  }
-
-  async setToDateToday() {
-    await this.toDateInput.click();
-    await this.page
-      .locator('.oxd-date-wrapper', { has: this.toDateInput })
-      .getByText('Today', { exact: true })
-      .click();
+  async setDates(from: string, to: string) {
+    await this.fromDateInput.fill(from);
+    await this.fromDateInput.press('Tab');
+    await this.toDateInput.fill(to);
+    await this.toDateInput.press('Tab');
   }
 }

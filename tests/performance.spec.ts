@@ -9,7 +9,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Searching manage reviews by employee name does not error', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const navBar = new NavBar(page);
   const reviewSearchPage = new ReviewSearchPage(page);
 

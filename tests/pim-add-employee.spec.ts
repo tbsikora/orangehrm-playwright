@@ -11,7 +11,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test('Adding an employee makes them searchable in the employee list', async ({ page }) => {
   const loginPage = new LoginPage(page);
-  const dashboardPage = new DashboardPage();
+  const dashboardPage = new DashboardPage(page);
   const addEmployeePage = new AddEmployeePage(page);
   const employeeListPage = new EmployeeListPage(page);
   const firstName = faker.person.firstName();
